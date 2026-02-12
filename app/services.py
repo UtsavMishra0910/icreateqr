@@ -48,7 +48,8 @@ def _normalize_reg_no(value: object) -> str:
 def normalize_columns(columns: Iterable[str]) -> list[str]:
     normalized = []
     for col in columns:
-        safe = re.sub(r"\s+", "_", str(col).strip().lower())
+        safe = str(col).replace("\ufeff", "").strip().lower()
+        safe = re.sub(r"[^a-z0-9]+", "_", safe).strip("_")
         normalized.append(HEADER_ALIASES.get(safe, safe))
     return normalized
 
@@ -56,7 +57,8 @@ def normalize_columns(columns: Iterable[str]) -> list[str]:
 def read_students_dataframe(file_path: Path) -> pd.DataFrame:
     suffix = file_path.suffix.lower()
     if suffix == ".csv":
-        df = pd.read_csv(file_path)
+        # Let pandas auto-detect comma/semicolon/tab delimiters.
+        df = pd.read_csv(file_path, sep=None, engine="python")
     elif suffix == ".xlsx":
         df = pd.read_excel(file_path)
     else:
@@ -64,8 +66,19 @@ def read_students_dataframe(file_path: Path) -> pd.DataFrame:
 
     df.columns = normalize_columns(df.columns)
     missing = [col for col in EXPECTED_COLUMNS if col not in df.columns]
+    if missing and not df.empty:
+        # Fallback: if the real header is in first data row, promote it.
+        candidate_headers = normalize_columns(df.iloc[0].tolist())
+        fallback_df = df.iloc[1:].copy()
+        fallback_df.columns = candidate_headers
+        fallback_missing = [col for col in EXPECTED_COLUMNS if col not in fallback_df.columns]
+        if not fallback_missing:
+            df = fallback_df
+            missing = []
+
     if missing:
-        raise ValueError(f"Missing required columns: {', '.join(missing)}")
+        detected = ", ".join(df.columns.astype(str).tolist())
+        raise ValueError(f"Missing required columns: {', '.join(missing)}. Detected columns: {detected}")
 
     # Keep only expected columns and sanitize common formatting issues.
     clean_df = df[EXPECTED_COLUMNS].copy()
