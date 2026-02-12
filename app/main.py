@@ -3,20 +3,25 @@ from pathlib import Path
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, StreamingResponse
+from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.config import BASE_DIR, UPLOAD_DIR
+from app.config import BASE_DIR, SECRET_KEY, UPLOAD_DIR
 from app.database import Base, engine, get_db
 from app.models import Attendance, Student
 from app.services import build_qr_zip, generate_qr, read_students_dataframe, upsert_students
 
 app = FastAPI(title="QR Attendance System", version="1.0.0")
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 app.mount("/qrcodes", StaticFiles(directory=str(BASE_DIR / "qrcodes")), name="qrcodes")
+
+ADMIN_EMAIL = "utsav.24bai10564@vitbhopal.ac.in"
+ADMIN_PASSWORD = "icreateqr"
 
 
 @app.on_event("startup")
@@ -142,3 +147,58 @@ def reports_page(request: Request, db: Session = Depends(get_db)):
         .all()
     )
     return templates.TemplateResponse("reports.html", {"request": request, "rows": rows})
+
+
+@app.get("/admin", response_class=HTMLResponse)
+def admin_page(request: Request):
+    is_admin = bool(request.session.get("is_admin"))
+    return templates.TemplateResponse("admin.html", {"request": request, "is_admin": is_admin})
+
+
+@app.post("/admin/login")
+def admin_login(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...),
+):
+    if email.strip().lower() != ADMIN_EMAIL or password != ADMIN_PASSWORD:
+        response = RedirectResponse(url="/admin", status_code=303)
+        response.set_cookie("flash", "Invalid admin email or password", max_age=5)
+        return response
+
+    request.session["is_admin"] = True
+    request.session["admin_email"] = ADMIN_EMAIL
+    response = RedirectResponse(url="/admin", status_code=303)
+    response.set_cookie("flash", "Admin login successful", max_age=5)
+    return response
+
+
+@app.post("/admin/logout")
+def admin_logout(request: Request):
+    request.session.clear()
+    response = RedirectResponse(url="/admin", status_code=303)
+    response.set_cookie("flash", "Admin logged out", max_age=5)
+    return response
+
+
+@app.post("/admin/delete")
+def admin_delete_data(request: Request, scope: str = Form(...), db: Session = Depends(get_db)):
+    if not request.session.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Admin login required")
+
+    if scope == "attendance":
+        db.query(Attendance).delete()
+        db.commit()
+        response = RedirectResponse(url="/admin", status_code=303)
+        response.set_cookie("flash", "Attendance records deleted", max_age=5)
+        return response
+
+    if scope == "all":
+        db.query(Attendance).delete()
+        db.query(Student).delete()
+        db.commit()
+        response = RedirectResponse(url="/admin", status_code=303)
+        response.set_cookie("flash", "Students and attendance deleted", max_age=5)
+        return response
+
+    raise HTTPException(status_code=400, detail="Invalid delete scope")

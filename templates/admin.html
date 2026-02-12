@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+    <h2>Admin Panel</h2>
+    {% if not is_admin %}
+    <p class="muted">Login to access delete actions.</p>
+    <form class="admin-form" method="post" action="/admin/login">
+        <label for="email">Admin Email</label>
+        <input id="email" type="email" name="email" required />
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" required />
+        <button class="btn" type="submit">Login</button>
+    </form>
+    {% else %}
+    <p class="muted">Logged in as admin. Select an action below.</p>
+    <form class="admin-form" method="post" action="/admin/delete" onsubmit="return confirm('Delete attendance only?')">
+        <input type="hidden" name="scope" value="attendance" />
+        <button class="btn ghost danger" type="submit">Delete Attendance</button>
+    </form>
+    <form class="admin-form" method="post" action="/admin/delete" onsubmit="return confirm('Delete ALL students and attendance?')">
+        <input type="hidden" name="scope" value="all" />
+        <button class="btn danger" type="submit">Delete Students + Attendance</button>
+    </form>
+    <form class="admin-form" method="post" action="/admin/logout">
+        <button class="btn secondary" type="submit">Logout</button>
+    </form>
+    {% endif %}
+</section>
+{% endblock %}

@@ -116,6 +116,24 @@ main {
     flex-wrap: wrap;
 }
 
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 420px;
+    margin-bottom: 14px;
+}
+
+.admin-form input {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.btn.danger {
+    background: var(--danger);
+}
+
 .table-wrap {
     overflow-x: auto;
 }
