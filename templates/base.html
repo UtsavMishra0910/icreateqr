@@ -2,28 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/icreate.png" />
+    
+    <link rel="icon" type="image/png" 
+          href="{{ url_for('static', filename='icreate.png') }}" />
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title if title else "QR Attendance" }}</title>
-    <link rel="stylesheet" href="/static/style.css" />
+    
+
+    <link rel="stylesheet" 
+          href="{{ url_for('static', filename='style.css') }}" />
 </head>
+
 <body>
     <header class="site-header">
         <div class="container nav-wrap">
+            
             <img 
-          src="/icreate.png" 
-          alt="iCreate Logo"
-          style="
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            margin-bottom: 0.8rem;
-            border-radius: 50%;
-            display: block;
-            "
-        />
+                src="{{ url_for('static', filename='icreate.png') }}"
+                alt="iCreate Logo"
+                style="
+                    width: 50px;
+                    height: 50px;
+                    object-fit: contain;
+                    margin-bottom: 0.8rem;
+                    border-radius: 50%;
+                    display: block;
+                "
+            />
 
             <h1>QR Attendance</h1>
+
             <nav>
                 <a href="/">Dashboard</a>
                 <a href="/students">Students</a>
@@ -33,10 +42,12 @@
             </nav>
         </div>
     </header>
+
     <main class="container">
         {% block content %}{% endblock %}
     </main>
-    <script src="/static/app.js"></script>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
