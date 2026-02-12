@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.config import BASE_DIR, UPLOAD_DIR
+from app.config import ADMIN_RESET_TOKEN, BASE_DIR, UPLOAD_DIR
 from app.database import Base, engine, get_db
 from app.models import Attendance, Student
 from app.services import build_qr_zip, generate_qr, read_students_dataframe, upsert_students
@@ -141,4 +141,32 @@ def reports_page(request: Request, db: Session = Depends(get_db)):
         .order_by(Attendance.scan_time.desc())
         .all()
     )
-    return templates.TemplateResponse("reports.html", {"request": request, "rows": rows})
+    return templates.TemplateResponse(
+        "reports.html",
+        {
+            "request": request,
+            "rows": rows,
+            "admin_reset_enabled": bool(ADMIN_RESET_TOKEN),
+        },
+    )
+
+
+@app.post("/admin/clear-test-data")
+def clear_test_data(
+    token: str = Form(...),
+    scope: str = Form("attendance"),
+    db: Session = Depends(get_db),
+):
+    if not ADMIN_RESET_TOKEN:
+        raise HTTPException(status_code=403, detail="Admin reset is disabled")
+    if token != ADMIN_RESET_TOKEN:
+        raise HTTPException(status_code=403, detail="Invalid admin token")
+
+    if scope not in {"attendance", "all"}:
+        raise HTTPException(status_code=400, detail="Invalid scope")
+
+    db.query(Attendance).delete()
+    if scope == "all":
+        db.query(Student).delete()
+    db.commit()
+    return RedirectResponse(url="/reports", status_code=303)
