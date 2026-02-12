@@ -27,6 +27,24 @@ HEADER_ALIASES = {
 }
 
 
+def _normalize_cell(value: object) -> str:
+    # Treat empty spreadsheet values consistently before validation.
+    if pd.isna(value):
+        return ""
+    text = str(value).strip()
+    if text.lower() in {"", "nan", "none", "null", "na", "n/a"}:
+        return ""
+    return text
+
+
+def _normalize_reg_no(value: object) -> str:
+    text = _normalize_cell(value)
+    # Excel often converts text-like numbers to float strings (e.g. 101.0).
+    if re.fullmatch(r"\d+\.0", text):
+        return text[:-2]
+    return text
+
+
 def normalize_columns(columns: Iterable[str]) -> list[str]:
     normalized = []
     for col in columns:
@@ -51,9 +69,9 @@ def read_students_dataframe(file_path: Path) -> pd.DataFrame:
 
     # Keep only expected columns and sanitize common formatting issues.
     clean_df = df[EXPECTED_COLUMNS].copy()
-    clean_df["name"] = clean_df["name"].astype(str).str.strip()
-    clean_df["reg_no"] = clean_df["reg_no"].astype(str).str.strip()
-    clean_df["email"] = clean_df["email"].astype(str).str.strip().str.lower()
+    clean_df["name"] = clean_df["name"].apply(_normalize_cell)
+    clean_df["reg_no"] = clean_df["reg_no"].apply(_normalize_reg_no)
+    clean_df["email"] = clean_df["email"].apply(_normalize_cell).str.lower()
     clean_df = clean_df[(clean_df["name"] != "") & (clean_df["reg_no"] != "") & (clean_df["email"] != "")]
     return clean_df.drop_duplicates(subset=["reg_no"])
 
