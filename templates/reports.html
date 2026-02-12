@@ -1,23 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="card">
-    <h2>Admin Test Data Reset</h2>
-    {% if admin_reset_enabled %}
-    <p class="muted">Use your admin token to clear test data after QA.</p>
-    <form class="upload-form" method="post" action="/admin/clear-test-data">
-        <input type="password" name="token" placeholder="Admin reset token" required />
-        <select name="scope" required>
-            <option value="attendance">Clear Attendance Only</option>
-            <option value="all">Clear Students + Attendance</option>
-        </select>
-        <button class="btn ghost" type="submit" onclick="return confirm('Are you sure you want to clear selected data?')">Clear Data</button>
-    </form>
-    {% else %}
-    <p class="muted">Set <code>ADMIN_RESET_TOKEN</code> environment variable to enable protected reset.</p>
-    {% endif %}
-</section>
-
-<section class="card">
     <h2>Attendance Reports</h2>
     <div class="table-wrap">
         <table>

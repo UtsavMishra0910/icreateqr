@@ -87,7 +87,6 @@ Copy-Item .env.example .env
 ```env
 DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/qr_attendance
 SECRET_KEY=strong-random-secret
-ADMIN_RESET_TOKEN=strong-admin-reset-token
 UPLOAD_DIR=uploads
 QR_DIR=qrcodes
 ```
@@ -144,7 +143,6 @@ For 100 concurrent users, scale by worker count and use a managed PostgreSQL ins
 5. Add env vars in web service:
    - `DATABASE_URL` = Render DB connection string
    - `SECRET_KEY` = strong random value
-   - `ADMIN_RESET_TOKEN` = strong random value
    - `UPLOAD_DIR` = `uploads`
    - `QR_DIR` = `qrcodes`
 6. Redeploy.
