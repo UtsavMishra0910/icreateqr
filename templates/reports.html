@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+    <h2>Attendance Reports</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Reg No</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Scan Time (UTC)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attendance, student in rows %}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.reg_no }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ attendance.date.strftime("%Y-%m-%d") }}</td>
+                    <td>{{ attendance.scan_time.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                </tr>
+                {% endfor %}
+                {% if not rows %}
+                <tr>
+                    <td colspan="5">No attendance records available yet.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

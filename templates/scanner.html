@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+    <h2>Live QR Attendance Scanner</h2>
+    <p class="muted">Scan student QR code to mark attendance for today.</p>
+    <div id="qr-reader"></div>
+    <div id="scan-status" class="status idle">Waiting for scan...</div>
+    <button id="start-scan" class="btn">Start Scanner</button>
+    <button id="stop-scan" class="btn ghost">Stop Scanner</button>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/html5-qrcode" defer></script>
+<script src="/static/scanner.js" defer></script>
+{% endblock %}

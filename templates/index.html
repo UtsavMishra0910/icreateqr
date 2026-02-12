@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="grid">
+    <article class="card metric">
+        <h2>Total Students</h2>
+        <p class="number">{{ student_count }}</p>
+    </article>
+    <article class="card metric">
+        <h2>Attendance Today</h2>
+        <p class="number">{{ today_attendance }}</p>
+    </article>
+</section>
+
+<section class="card">
+    <h2>Quick Actions</h2>
+    <div class="actions">
+        <a class="btn" href="/students">Upload Students</a>
+        <a class="btn secondary" href="/scanner">Open Scanner</a>
+        <a class="btn ghost" href="/reports">View Reports</a>
+    </div>
+</section>
+{% endblock %}

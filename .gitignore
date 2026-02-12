@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+uploads/
+qrcodes/
+instance/
+.DS_Store

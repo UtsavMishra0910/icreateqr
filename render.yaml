@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: qr-attendance-app
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn -w 3 -k uvicorn.workers.UvicornWorker app.main:app"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: qr-attendance-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: QR_DIR
+        value: qrcodes
+
+databases:
+  - name: qr-attendance-db
+    plan: free

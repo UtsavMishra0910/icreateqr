@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+    <h2>Upload Student File</h2>
+    <p class="muted">Required columns: <code>name</code>, <code>reg_no</code>, <code>email</code></p>
+    <form class="upload-form" method="post" action="/students/upload" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx,.csv" required />
+        <button class="btn" type="submit">Upload</button>
+        <a class="btn secondary" href="/qrcodes/download">Download All QR ZIP</a>
+    </form>
+</section>
+
+<section class="card">
+    <h2>Registered Students</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Registration Number</th>
+                    <th>Email</th>
+                    <th>QR Code</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.reg_no }}</td>
+                    <td>{{ student.email }}</td>
+                    <td><a href="/students/{{ student.reg_no }}/qr" target="_blank">View QR</a></td>
+                    <td>{{ student.created_at.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                </tr>
+                {% endfor %}
+                {% if not students %}
+                <tr>
+                    <td colspan="5">No students found. Upload a file to begin.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
