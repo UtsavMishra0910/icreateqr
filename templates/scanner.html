@@ -12,5 +12,5 @@
 
 {% block scripts %}
 <script src="https://unpkg.com/html5-qrcode" defer></script>
-<script src="/static/scanner.js" defer></script>
+<script src="{{ url_for('static', path='scanner.js') }}" defer></script>
 {% endblock %}

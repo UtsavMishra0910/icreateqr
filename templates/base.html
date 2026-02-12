@@ -2,24 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    
-    <link rel="icon" type="image/png" 
-          href="{{ url_for('static', filename='icreate.png') }}" />
-    
+    <link rel="icon" type="image/png" href="{{ url_for('static', path='icreate.png') }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title if title else "QR Attendance" }}</title>
-    
-
-    <link rel="stylesheet" 
-          href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}" />
 </head>
 
 <body>
     <header class="site-header">
         <div class="container nav-wrap">
             
-            <img 
-                src="{{ url_for('static', filename='icreate.png') }}"
+            <img
+                src="{{ url_for('static', path='icreate.png') }}"
                 alt="iCreate Logo"
                 style="
                     width: 50px;
@@ -46,8 +40,7 @@
     <main class="container">
         {% block content %}{% endblock %}
     </main>
-
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script src="{{ url_for('static', path='app.js') }}"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
