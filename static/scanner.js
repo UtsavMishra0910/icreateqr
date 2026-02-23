@@ -44,7 +44,8 @@ async function onScanSuccess(decodedText) {
         const payload = await response.json();
 
         if (payload.status === "success") {
-            setStatus("success", payload.message);
+            const timeIst = payload.time_ist ? ` at ${payload.time_ist.replace("T", " ").slice(0, 19)} IST` : "";
+            setStatus("success", `${payload.message}${timeIst}`);
         } else if (payload.status === "duplicate") {
             setStatus("error", payload.message);
         } else {

@@ -10,17 +10,17 @@
                     <th>Reg No</th>
                     <th>Email</th>
                     <th>Date</th>
-                    <th>Scan Time (UTC)</th>
+                    <th>Scan Time (IST)</th>
                 </tr>
             </thead>
             <tbody>
-                {% for attendance, student in rows %}
+                {% for row in rows %}
                 <tr>
-                    <td>{{ student.name }}</td>
-                    <td>{{ student.reg_no }}</td>
-                    <td>{{ student.email }}</td>
-                    <td>{{ attendance.date.strftime("%Y-%m-%d") }}</td>
-                    <td>{{ attendance.scan_time.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                    <td>{{ row.student.name }}</td>
+                    <td>{{ row.student.reg_no }}</td>
+                    <td>{{ row.student.email }}</td>
+                    <td>{{ row.attendance.date.strftime("%Y-%m-%d") }}</td>
+                    <td>{{ row.scan_time_ist }}</td>
                 </tr>
                 {% endfor %}
                 {% if not rows %}

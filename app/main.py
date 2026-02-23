@@ -1,5 +1,6 @@
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, StreamingResponse
@@ -22,6 +23,13 @@ app.mount("/qrcodes", StaticFiles(directory=str(BASE_DIR / "qrcodes")), name="qr
 
 ADMIN_EMAIL = "utsav.24bai10564@vitbhopal.ac.in"
 ADMIN_PASSWORD = "icreateqr"
+IST_TZ = ZoneInfo("Asia/Kolkata")
+
+
+def to_ist(dt: datetime) -> datetime:
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(IST_TZ)
 
 
 @app.on_event("startup")
@@ -129,23 +137,35 @@ def mark_attendance(reg_no: str = Form(...), db: Session = Depends(get_db)):
     record = Attendance(student_id=student.id, scan_time=datetime.utcnow(), date=today)
     db.add(record)
     db.commit()
+    scan_time_ist = to_ist(record.scan_time)
     return {
         "status": "success",
         "message": f"Attendance marked for {student.name}",
         "student": student.name,
         "reg_no": student.reg_no,
-        "time": record.scan_time.isoformat(),
+        "time_utc": record.scan_time.replace(tzinfo=timezone.utc).isoformat(),
+        "time_ist": scan_time_ist.isoformat(),
     }
 
 
 @app.get("/reports", response_class=HTMLResponse)
 def reports_page(request: Request, db: Session = Depends(get_db)):
-    rows = (
+    rows_raw = (
         db.query(Attendance, Student)
         .join(Student, Attendance.student_id == Student.id)
         .order_by(Attendance.scan_time.desc())
         .all()
     )
+    rows = []
+    for attendance, student in rows_raw:
+        scan_time_ist = to_ist(attendance.scan_time)
+        rows.append(
+            {
+                "attendance": attendance,
+                "student": student,
+                "scan_time_ist": scan_time_ist.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+        )
     return templates.TemplateResponse("reports.html", {"request": request, "rows": rows})
 
 
