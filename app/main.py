@@ -21,7 +21,7 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 app.mount("/qrcodes", StaticFiles(directory=str(BASE_DIR / "qrcodes")), name="qrcodes")
 
-ADMIN_EMAIL = "utsav.24bai10564@vitbhopal.ac.in"
+ADMIN_EMAIL = "akshat.23bce11080@vitbhopal.ac.in"
 ADMIN_PASSWORD = "icreateqr"
 IST_TZ = ZoneInfo("Asia/Kolkata")
 
