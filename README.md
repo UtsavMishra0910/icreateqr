@@ -2,7 +2,7 @@
 
 Production-ready web app for student onboarding via Excel/CSV, QR generation, live attendance scanning, and attendance reporting.
 
-## Folder Structure
+Folder Structure
 
 ```text
 icreateqr/
