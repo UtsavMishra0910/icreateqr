@@ -1,4 +1,4 @@
-# QR Attendance Web Application (FastAPI + PostgreSQL)
+QR Attendance Web Application (FastAPI + PostgreSQL)
 
 Production-ready web app for student onboarding via Excel/CSV, QR generation, live attendance scanning, and attendance reporting.
 
