@@ -60,7 +60,7 @@ icreateqr/
 - `date`
 - unique constraint on (`student_id`, `date`)
 
-## Local Setup
+Local Setup
 
 1. Create virtual environment and install dependencies:
 
