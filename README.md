@@ -53,7 +53,7 @@ icreateqr/
 - `qr_code_path`
 - `created_at`
 
-### `attendance`
+## `attendance`
 - `id`
 - `student_id` (FK -> students.id)
 - `scan_time`
