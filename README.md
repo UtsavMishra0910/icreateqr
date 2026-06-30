@@ -45,7 +45,7 @@ icreateqr/
 
 ## Database Schema
 
-### `students`
+## `students`
 - `id`
 - `name`
 - `reg_no` (unique)
