@@ -43,7 +43,7 @@ icreateqr/
 - Attendance report view
 - Validation and error handling for common failures
 
-## Database Schema
+Database Schema
 
 ## `students`
 - `id`
