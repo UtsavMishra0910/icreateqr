@@ -44,8 +44,7 @@ icreateqr/
 - Validation and error handling for common failures
 
 Database Schema
-
-## `students`
+ `students`
 - `id`
 - `name`
 - `reg_no` (unique)
