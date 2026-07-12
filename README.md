@@ -122,7 +122,7 @@ gunicorn -w 3 -k uvicorn.workers.UvicornWorker app.main:app
 
 For 100 concurrent users, scale by worker count and use a managed PostgreSQL instance.
 
-## Deploy on Render (Free)
+#Deploy on Render (Free)
 
 ### Option A: One-click with `render.yaml`
 1. Push this repo to GitHub.
