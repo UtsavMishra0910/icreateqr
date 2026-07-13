@@ -98,7 +98,7 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 Open: `http://localhost:8000`
 
-## Upload File Format
+Upload File Format
 
 Example CSV:
 
