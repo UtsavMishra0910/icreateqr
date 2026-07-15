@@ -108,7 +108,7 @@ Alice Johnson,REG001,alice@example.com
 Bob Smith,REG002,bob@example.com
 ```
 
-#Production Readiness Notes
+Production Readiness Notes
 
 - Uses connection pool pre-ping for DB reliability.
 - Handles bad file types, missing columns, empty uploads, and duplicates.
