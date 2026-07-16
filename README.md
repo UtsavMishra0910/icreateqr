@@ -146,7 +146,7 @@ For 100 concurrent users, scale by worker count and use a managed PostgreSQL ins
    - `QR_DIR` = `qrcodes`
 6. Redeploy.
 
-#Railway / PythonAnywhere (Alternative)
+Railway / PythonAnywhere (Alternative)
 
 - Railway:
   - Create PostgreSQL plugin and Python service.
