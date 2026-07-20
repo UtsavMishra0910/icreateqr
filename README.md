@@ -132,7 +132,7 @@ For 100 concurrent users, scale by worker count and use a managed PostgreSQL ins
    - PostgreSQL (`qr-attendance-db`)
 4. Deploy and open app URL.
 
-### Option B: Manual
+## Option B: Manual
 1. Create `Web Service` (Python) from GitHub repo.
 2. Build command:
    - `pip install -r requirements.txt`
