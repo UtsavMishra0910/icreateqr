@@ -167,7 +167,7 @@ Railway / PythonAnywhere (Alternative)
 6. Check `/reports` for timestamped logs.
 7. Restart server and verify QR link still works (auto-regeneration).
 
-# API/Routes
+API/Routes
 
 - `GET /` dashboard
 - `GET /students` student list/upload page
